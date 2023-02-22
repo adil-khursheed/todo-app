@@ -33,16 +33,21 @@
     --border-color: hsl(237, 14%, 26%);
 }
 
-.container{
+body{
     width: 100vw;
     min-height: 100vh;
-    position: relative;
     background: var(--background-color);
+    display: flex;
+    justify-content: center;
 }
 
 .background__image{
-    width: 100vw;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     height: 250px;
+    z-index: -1;
 }
 
 .background__image img{
@@ -53,13 +58,10 @@
 }
 
 .todo{
-    position: absolute;
-    top: 60px;
-    left: 50%;
-    transform: translateX(-50%);
     max-width: 500px;
     width: 100%;
-    padding: 1.5rem;
+    margin-top: 80px;
+    padding: 0 1.5rem;
 }
 
 .todo nav{
@@ -104,19 +106,18 @@
     justify-content: center;
 }
 
-.input__circle:hover{
+.input__circle:hover,
+.input__circle.checked{
     background: linear-gradient(135deg, hsl(192, 100%, 67%) 0%, hsl(280, 87%, 65%) 100%);
+    border: none;
 }
 
 .input__circle img{
     display: none;
 }
 
-.input__circle.checked{
-    background: linear-gradient(135deg, hsl(192, 100%, 67%) 0%, hsl(280, 87%, 65%) 100%);
-}
-
-.input__circle.checked img{
+.input__circle:hover img
+,.input__circle.checked img{
     display: block;
 }
 
@@ -136,7 +137,8 @@
 .todo__items__wrapper{
     background-color: var(--foreground-color);
     border-radius: 4px;
-    overflow: hidden;
+    position: relative;
+    margin-bottom: 100px;
 }
 
 .todo__item{
@@ -146,7 +148,7 @@
     padding: 1rem 1.5rem;
     color: var(--Input-color);
     border-bottom: 1px solid var(--border-color);
-    background-color: var(--foreground-color);
+    /* background-color: var(--foreground-color); */
     transition: all 0.25s ease;
     cursor: pointer;
 }
@@ -157,9 +159,17 @@
     border-color: hsl(235, 24%, 19%);
 }
 
+.todo__text{
+    flex: 1;
+}
+
 .todo__text.checked{
     color: var(--Dark-Grayish-Blue);
     text-decoration: line-through;
+}
+
+.todo__delete img{
+    width: 15px;
 }
 
 
@@ -192,3 +202,22 @@
 /* ==== FOOTER ==== */
 /* .attribution { font-size: 11px; text-align: center; }
 .attribution a { color: hsl(228, 45%, 44%); } */
+
+
+@media screen and (max-width: 470px){
+    .todo__items__wrapper{
+        position: relative;
+    }
+
+    .todo__item__filter{
+        position: absolute;
+        bottom: -60px;
+        left: 0;
+        right: 0;
+        padding: 1rem 1.5rem;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--foreground-color);
+        border-radius: 4px;
+    }
+}

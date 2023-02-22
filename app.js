@@ -13,7 +13,6 @@ const addItem = (event) => {
 // Getting the TODO Items
 const getItems = () => {
     db.collection("todo-items").onSnapshot((snapshot) => {
-        // console.log(snapshot);
         let items = [];
         snapshot.docs.forEach((doc) => {
             items.push({
@@ -21,8 +20,8 @@ const getItems = () => {
                 ...doc.data(),
             })
         })
-        // console.log(items);
         generateItems(items);
+        itemsLeft();
     })
 }
 
@@ -32,14 +31,16 @@ const generateItems = (items) => {
 
     let itemsHTML = "";
     items.forEach((item) => {
-        // console.log(item);
         itemsHTML +=
         `<div class="todo__item">
             <div data-id="${item.id}" class="input__circle ${item.status == "completed" ? "checked" : ""}">
-            <img src="images/icon-check.svg" alt="">
+                <img src="images/icon-check.svg" alt="">
             </div>
             <div class="todo__text ${item.status == "completed" ? "checked" : ""}">
-            ${item.text}
+                ${item.text}
+            </div>
+            <div data-id="${item.id}" class="todo__delete">
+                <img src="images/icon-cross.svg" alt="">
             </div>
         </div>`
     })
@@ -49,19 +50,35 @@ const generateItems = (items) => {
 }
 
 
+// Creating Event Listeners
 const createEventListeners = () => {
     let todoCheckMarks = document.querySelectorAll(".todo__item .input__circle");
+    let todoDeleteBtns = document.querySelectorAll(".todo__item .todo__delete");
+    let clearTodo = document.querySelector(".todo__clear")
 
     todoCheckMarks.forEach((checkMark) => {
         checkMark.addEventListener("click", () => {
             markCompleted(checkMark.dataset.id);
         })
     })
+
+    todoDeleteBtns.forEach((deleteBtn) => {
+        deleteBtn.addEventListener("click", () => {
+            removeTodo(deleteBtn.dataset.id);
+        })
+    })
+
+    clearTodo.addEventListener("click", () => {
+        clearCompleted(clearTodo.dataset.id);
+    })
+
 }
 
+
+// Check Mark Update Function
 const markCompleted = (id) => {
-    // console.log(id)
     let item = db.collection("todo-items").doc(id);
+    // console.log(id);
     item.get().then((doc) => {
         if (doc.exists) {
             let status = doc.data().status;
@@ -78,7 +95,44 @@ const markCompleted = (id) => {
     })
 }
 
-getItems()
+
+// Delete TODO Function
+const removeTodo = (id) => {
+    let item = db.collection("todo-items").doc(id);
+    item.delete();
+}
+
+
+// Items TODO Left
+const itemsLeft = () => {
+    const todoText = document.querySelectorAll(".todo__text");
+    const completedTodo = document.querySelectorAll(".todo__text.checked")
+
+
+    let todoHTML = todoText.length - completedTodo.length;
+
+    document.querySelector(".todo__item__left").innerHTML = `<p>${todoHTML} items left</p>`;
+
+}
+
+
+
+// Clear Completed TODOs
+const clearCompleted = (id) => {
+    let item = db.collection("todo-items").doc(id);
+    item.get().then((doc) => {
+        if (doc.exists) {
+            let status = doc.data().status;
+            if (status == "completed") {
+                item.delete();
+            }
+        }
+    })
+}
+
+
+
+getItems();
 
 
 
