@@ -1,3 +1,5 @@
+let todoArray = [];
+
 // Adding TODO Items
 const addItem = (event) => {
     event.preventDefault();
@@ -32,7 +34,7 @@ const generateItems = (items) => {
     let itemsHTML = "";
     items.forEach((item) => {
         itemsHTML +=
-        `<div class="todo__item">
+        `<div data-id="${item.id}" class="todo__item ${item.status == "completed" ? "checked" : ""}">
             <div data-id="${item.id}" class="input__circle ${item.status == "completed" ? "checked" : ""}">
                 <img src="images/icon-check.svg" alt="">
             </div>
@@ -52,9 +54,15 @@ const generateItems = (items) => {
 
 // Creating Event Listeners
 const createEventListeners = () => {
-    let todoCheckMarks = document.querySelectorAll(".todo__item .input__circle");
-    let todoDeleteBtns = document.querySelectorAll(".todo__item .todo__delete");
-    let clearTodo = document.querySelector(".todo__clear")
+    const todoCheckMarks = document.querySelectorAll(".todo__item .input__circle");
+    const todoDeleteBtns = document.querySelectorAll(".todo__item .todo__delete");
+    const clearTodo = document.querySelector(".todo__clear");
+    const completedItems = document.querySelectorAll(".todo__item.checked");
+    // console.log(completedItems);
+    const todoItemFilterBtns = document.querySelectorAll(".todo__item__filter p");
+    // console.log(todoItemFilterBtns);
+    const todoItems = document.querySelectorAll(".todo__item");
+    // console.log(todoItems);
 
     todoCheckMarks.forEach((checkMark) => {
         checkMark.addEventListener("click", () => {
@@ -68,9 +76,42 @@ const createEventListeners = () => {
         })
     })
 
-    clearTodo.addEventListener("click", () => {
-        clearCompleted(clearTodo.dataset.id);
+    completedItems.forEach((completedItem) =>{
+        clearTodo.addEventListener("click", () => {
+            removeTodo(completedItem.dataset.id);
+        })
     })
+
+    todoItemFilterBtns.forEach((filterBtn) => {
+        filterBtn.addEventListener("click", () => {
+            todoItemFilterBtns.forEach((btn) => {
+                btn.classList.remove("active");
+            })
+            filterBtn.classList.add("active");
+            if (filterBtn.innerText == "Active") {
+                todoItems.forEach(todoItem => {
+                    if (!todoItem.classList.contains("checked")) {
+                        todoItem.style.display = "flex";
+                    } else {
+                        todoItem.style.display = "none";
+                    }
+                })
+            } else if (filterBtn.innerText == "Completed") {
+                todoItems.forEach(todoItem => {
+                    if (todoItem.classList.contains("checked")) {
+                        todoItem.style.display = "flex";
+                    } else {
+                        todoItem.style.display = "none";
+                    }
+                })
+            } else {
+                todoItems.forEach(todoItem => {
+                    todoItem.style.display = "flex";
+                })
+            }
+        })
+    })
+
 
 }
 
@@ -115,23 +156,6 @@ const itemsLeft = () => {
 
 }
 
-
-
-// Clear Completed TODOs
-const clearCompleted = (id) => {
-    let item = db.collection("todo-items").doc(id);
-    item.get().then((doc) => {
-        if (doc.exists) {
-            let status = doc.data().status;
-            if (status == "completed") {
-                item.delete();
-            }
-        }
-    })
-}
-
-
-
 getItems();
 
 
@@ -166,4 +190,3 @@ modeTogglerIcon.addEventListener("click", () => {
         disableDarkMode();
     }
 })
-
