@@ -38,7 +38,8 @@ body{
     min-height: 100vh;
     background: var(--background-color);
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 .background__image{
@@ -121,6 +122,11 @@ body{
     display: block;
 }
 
+
+form{
+    width: 100%;
+}
+
 #create__todo__input{
     width: 100%;
     border: none;
@@ -138,7 +144,7 @@ body{
     background-color: var(--foreground-color);
     border-radius: 4px;
     position: relative;
-    margin-bottom: 100px;
+    margin-bottom: 2rem;
 }
 
 .todo__item{
@@ -198,10 +204,28 @@ body{
     color: var(--Bright-Blue);
 }
 
+.drag__drop{
+    color: var(--Dark-Grayish-Blue);
+    margin-bottom: 2rem;
+}
 
-/* ==== FOOTER ==== */
-/* .attribution { font-size: 11px; text-align: center; }
-.attribution a { color: hsl(228, 45%, 44%); } */
+.hide{
+    display: none;
+}
+
+/* ==== FOOTER ====  */
+.attribution {
+    max-width: 500px;
+    width: 100%;
+    font-size: 12px;
+    text-align: center;
+    margin-bottom: 50px;
+    color: var(--Input-color);
+}
+
+.attribution a {
+    color: var(--Bright-Blue);
+}
 
 
 @media screen and (max-width: 470px){
@@ -219,5 +243,9 @@ body{
         align-items: center;
         background-color: var(--foreground-color);
         border-radius: 4px;
+    }
+
+    .drag__drop{
+        margin-top: 4rem;
     }
 }

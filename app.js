@@ -1,4 +1,4 @@
-let todoArray = [];
+const todoItems = document.querySelector(".todo__items");
 
 // Adding TODO Items
 const addItem = (event) => {
@@ -34,7 +34,7 @@ const generateItems = (items) => {
     let itemsHTML = "";
     items.forEach((item) => {
         itemsHTML +=
-        `<div data-id="${item.id}" class="todo__item ${item.status == "completed" ? "checked" : ""}">
+        `<div draggable="true" data-id="${item.id}" class="todo__item ${item.status == "completed" ? "checked" : ""}">
             <div data-id="${item.id}" class="input__circle ${item.status == "completed" ? "checked" : ""}">
                 <img src="images/icon-check.svg" alt="">
             </div>
@@ -156,6 +156,20 @@ const itemsLeft = () => {
 
 }
 
+// Drag and Drop Function
+const items = document.querySelectorAll(".todo__item");
+
+const dragStart = (e) => {
+    e.dataTransfer.setData('text/plain', e.target.id);
+    setTimeout(() => {
+        e.target.classList.add('hide');
+    }, 0)
+}
+
+items.forEach(item => {
+    item.addEventListener('dragstart', dragStart);
+})
+
 getItems();
 
 
@@ -189,4 +203,9 @@ modeTogglerIcon.addEventListener("click", () => {
     } else {
         disableDarkMode();
     }
+})
+
+
+new Sortable(todoItems, {
+    animation: 300,
 })
